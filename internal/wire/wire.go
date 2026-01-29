@@ -30,13 +30,13 @@ func InitializeApp(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	adaptorInstance := adaptor.NewAdaptor(uc, logger)
 
 	// Setup routes
-	setupRoutes(router, adaptorInstance.InventoriesAdaptor, adaptorInstance.StaffAdaptor, adaptorInstance.OrderAdaptor, logger)
+	setupRoutes(router, adaptorInstance.InventoriesAdaptor, adaptorInstance.StaffAdaptor, adaptorInstance.OrderAdaptor, adaptorInstance.RevenueAdaptor, logger)
 
 	return router
 }
 
 // setupRoutes mengatur semua routing untuk aplikasi
-func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdaptor, staffHandler *adaptor.StaffAdaptor, orderHandler *adaptor.OrderAdaptor, logger *zap.Logger) {
+func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdaptor, staffHandler *adaptor.StaffAdaptor, orderHandler *adaptor.OrderAdaptor, revenueHandler *adaptor.RevenueAdaptor, logger *zap.Logger) {
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
 		utils.ResponseSuccess(c.Writer, 200, "Server is running", map[string]string{
@@ -112,6 +112,19 @@ func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdap
 
 			// 7. GET available chairs
 			order.GET("/available-chairs", orderHandler.GetAvailableChairs)
+		}
+
+		// Revenue Report routes
+		revenue := v1.Group("/revenue")
+		{
+			// 1. GET total revenue dan breakdown berdasarkan status
+			revenue.GET("/by-status", revenueHandler.GetRevenueByStatus)
+
+			// 2. GET total revenue per bulan (optional query param: year)
+			revenue.GET("/per-month", revenueHandler.GetRevenuePerMonth)
+
+			// 3. GET list produk beserta detail revenue
+			revenue.GET("/products", revenueHandler.GetProductRevenueList)
 		}
 	}
 
