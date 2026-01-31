@@ -30,13 +30,13 @@ func InitializeApp(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	adaptorInstance := adaptor.NewAdaptor(uc, logger)
 
 	// Setup routes
-	setupRoutes(router, adaptorInstance.InventoriesAdaptor, adaptorInstance.StaffAdaptor, adaptorInstance.OrderAdaptor, adaptorInstance.RevenueAdaptor, logger)
+	setupRoutes(router, adaptorInstance.InventoriesAdaptor, adaptorInstance.StaffAdaptor, adaptorInstance.OrderAdaptor, adaptorInstance.RevenueAdaptor, adaptorInstance.ReservationsAdaptor, logger)
 
 	return router
 }
 
 // setupRoutes mengatur semua routing untuk aplikasi
-func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdaptor, staffHandler *adaptor.StaffAdaptor, orderHandler *adaptor.OrderAdaptor, revenueHandler *adaptor.RevenueAdaptor, logger *zap.Logger) {
+func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdaptor, staffHandler *adaptor.StaffAdaptor, orderHandler *adaptor.OrderAdaptor, revenueHandler *adaptor.RevenueAdaptor, reservationHandler *adaptor.ReservationsAdaptor, logger *zap.Logger) {
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
 		utils.ResponseSuccess(c.Writer, 200, "Server is running", map[string]string{
@@ -125,6 +125,22 @@ func setupRoutes(router *gin.Engine, inventoriesHandler *adaptor.InventoriesAdap
 
 			// 3. GET list produk beserta detail revenue
 			revenue.GET("/products", revenueHandler.GetProductRevenueList)
+		}
+
+		// Reservation routes
+		reservation := v1.Group("/reservations")
+		{
+			// 1. GET all reservations
+			reservation.GET("", reservationHandler.GetAllReservations)
+
+			// 2. POST Create reservation
+			reservation.POST("", reservationHandler.CreateReservation)
+
+			// 3. PUT Update reservation
+			reservation.PUT("/:id", reservationHandler.UpdateReservation)
+
+			// 4. DELETE reservation
+			reservation.DELETE("/:id", reservationHandler.DeleteReservation)
 		}
 	}
 
