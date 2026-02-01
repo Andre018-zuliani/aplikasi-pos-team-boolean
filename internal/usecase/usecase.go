@@ -21,10 +21,12 @@ type UseCase struct {
 	log  *zap.Logger
 	repo repository.Repository
 
-	AuthUseCase        AuthUseCase
-	OrderUseCase       OrderUseCase
-	InventoriesUsecase InventoriesUsecase
-	StaffUseCase       StaffUseCase
+	OrderUseCase       *orderUseCase
+	InventoriesUsecase *inventoriesUsecase
+	StaffUseCase       *staffUseCase
+	RevenueUseCase     *revenueUseCase
+	ReservationUseCase ReservationsUseCase
+	AuthUseCase        AuthUseCas
 }
 
 func NewUseCase(repo *repository.Repository, logger *zap.Logger, tx *gorm.DB) *UseCase {
@@ -38,5 +40,7 @@ func NewUseCase(repo *repository.Repository, logger *zap.Logger, tx *gorm.DB) *U
 		OrderUseCase:       NewOrderUseCase(repo.OrderRepo, logger),
 		InventoriesUsecase: NewInventoriesUsecase(repo.InventoriesRepo, logger),
 		StaffUseCase:       NewStaffUseCase(repo.StaffRepo, logger),
+		RevenueUseCase:     NewRevenueUseCase(repo.RevenueRepo, logger),
+		ReservationUseCase: NewReservationUseCase(repo.ReservationRepo, logger),
 	}
 }
