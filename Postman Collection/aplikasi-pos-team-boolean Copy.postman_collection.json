@@ -1059,7 +1059,7 @@
 			"name": "Dashboard",
 			"item": [
 				{
-					"name": "Get Dashboard Summary",
+					"name": "1. GET Dashboard Summary",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1079,7 +1079,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Popular Products",
+					"name": "2. GET Popular Products",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1106,7 +1106,7 @@
 					"response": []
 				},
 				{
-					"name": "Get New Products",
+					"name": "3. GET New Products",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1127,6 +1127,38 @@
 									"value": "10",
 									"description": "Maximum number of products to return"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Export Dashboard Data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/dashboard/export",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dashboard",
+								"export"
 							]
 						}
 					},
