@@ -2,15 +2,6 @@ package usecase
 
 import (
 	"aplikasi-pos-team-boolean/internal/data/repository"
-
-	"go.uber.org/zap"
-	"gorm.io/gorm"
-)
-
-package usecase
-
-import (
-	"aplikasi-pos-team-boolean/internal/data/repository"
 	"aplikasi-pos-team-boolean/pkg/utils"
 
 	"go.uber.org/zap"
@@ -21,22 +12,24 @@ type UseCase struct {
 	log  *zap.Logger
 	repo repository.Repository
 
-	AuthUseCase        AuthUseCase
-	OrderUseCase       OrderUseCase
-	InventoriesUsecase InventoriesUsecase
-	StaffUseCase       StaffUseCase
+	AuthUseCase         AuthUseCase
+	OrderUseCase        OrderUseCase
+	InventoriesUsecase  InventoriesUsecase
+	StaffUseCase        StaffUseCase
+	ReservationsUseCase ReservationsUseCase
 }
 
 func NewUseCase(repo *repository.Repository, logger *zap.Logger, tx *gorm.DB) *UseCase {
-	emailService := utils.NewEmailService(logger)
+	emailService := utils.NewEmailService(logger, utils.Config.SMTP)
 
 	return &UseCase{
 		log:  logger,
 		repo: *repo,
 
-		AuthUseCase:        NewAuthUseCase(repo.AuthRepo, logger, emailService),
-		OrderUseCase:       NewOrderUseCase(repo.OrderRepo, logger),
-		InventoriesUsecase: NewInventoriesUsecase(repo.InventoriesRepo, logger),
-		StaffUseCase:       NewStaffUseCase(repo.StaffRepo, logger),
+		AuthUseCase:         NewAuthUseCase(repo.AuthRepo, logger, emailService),
+		OrderUseCase:        NewOrderUseCase(repo.OrderRepo, logger),
+		InventoriesUsecase:  NewInventoriesUsecase(repo.InventoriesRepo, logger),
+		StaffUseCase:        NewStaffUseCase(repo.StaffRepo, logger),
+		ReservationsUseCase: NewReservationUseCase(repo.ReservationsRepo, logger),
 	}
 }
